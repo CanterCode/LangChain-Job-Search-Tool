@@ -17,6 +17,7 @@ class JobDescriptionSchema(BaseModel):
     location: str = Field(..., description="Job location or remote status")
 
     # Optional fields
+    salary: Optional[str] = None
     company: Optional[str] = None
     seniority_level: Optional[str] = None
     preferred_skills: Optional[List[str]] = None
@@ -93,6 +94,7 @@ Job Description:
                 responsibilities=[],
                 required_experience="",
                 location="",
+                salary=None,
                 company=None,
                 seniority_level=None,
                 preferred_skills=None,
