@@ -21,7 +21,15 @@ def build_rss_url(query: str) -> str:
 
 
 def fetch_rss_feed(url: str):
-    response = requests.get(url, timeout=10)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+    }
+
+    response = requests.get(url, headers=headers, timeout=10)
     response.raise_for_status()
     return feedparser.parse(response.text)
 
