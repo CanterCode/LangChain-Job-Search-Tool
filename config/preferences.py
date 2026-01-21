@@ -33,14 +33,61 @@ USER_PREFERENCES = {
     "benefit_bonus_good": ["health insurance", "401k", "pto"],
 
     # Commute scoring (UPDATED)
-    "primary_cities": [
-        "southlake", "westlake", "flower mound", "irving",
-        "lewisville", "euless", "bedford", "hurst", "grapevine"
+        "primary_cities": [
+        "watauga",
+        "keller",
+        "north richland hills",
+        "haltom city",
+        "saginaw",
+        "hurst",
+        "euless",
+        "bedford",
+        "colleyville",
+        "grapevine",
+        "southlake"
     ],
+        
     "secondary_cities": [
-        "the colony", "carrollton", "coppell", "highland village",
-        "plano", "frisco", "richardson"
+        "trophy club",
+        "roanoke",
+        "flower mound",
+        "lewisville",
+        "coppell",
+        "the colony",
+        "carrollton",
+        "highland village",
+        "frisco",
+        "plano",
     ],
+    
     "primary_city_bonus": 20,
-    "secondary_city_bonus": 10
+    "secondary_city_bonus": 10,
+    
+    "allowed_cities": [
+        "watauga",
+        "keller",
+        "north richland hills",
+        "haltom city",
+        "saginaw",
+        "hurst",
+        "euless",
+        "bedford",
+        "colleyville",
+        "grapevine",
+        "southlake",
+        "trophy club",
+        "roanoke",
+        "flower mound",
+        "lewisville",
+        "coppell",
+        "the colony",
+        "carrollton",
+        "highland village",
+        "frisco",
+        "plano",
+        "dallas",
+        "fort worth",
+        "tarrant county",
+        "dfw",
+    ]
 }

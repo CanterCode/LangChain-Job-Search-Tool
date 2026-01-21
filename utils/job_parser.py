@@ -1,5 +1,11 @@
 import re
 
+TECH_KEYWORDS = [
+    "developer", "engineer", "software", "frontend", "front end",
+    "fullstack", "full stack", "react", "javascript", "typescript",
+    "web developer", "programmer"
+]
+
 SKILL_KEYWORDS = [
     "react", "javascript", "typescript", "html", "css",
     "node", "python", "aws",
@@ -11,8 +17,12 @@ BACKEND_KEYWORDS = ["backend", "api", "node", "django", "flask", "spring", "java
 SENIORITY_KEYWORDS = {
     "junior": ["junior", "entry level", "entry-level", "graduate", "associate", "assistant"],
     "mid": ["mid", "intermediate"],
-    "senior": ["senior", "lead", "principal", "staff", "architect"],
+    "senior": ["senior", "lead", "principal", "staff", "architect","sr", "sr."],
 }
+
+def is_tech_job(text: str) -> bool:
+    t = text.lower()
+    return any(keyword in t for keyword in TECH_KEYWORDS)
 
 def extract_years_experience(text: str) -> int | None:
     match = re.search(r"(\d+)\+?\s+years?", text.lower())
@@ -26,10 +36,17 @@ def extract_skills(text: str) -> list[str]:
 
 def infer_seniority(title: str, description: str) -> str:
     text = f"{title} {description}".lower()
-    for level, keywords in SENIORITY_KEYWORDS.items():
-        if any(k in text for k in keywords):
-            return level
+    for keyword in SENIORITY_KEYWORDS["senior"]:
+        if keyword in text:
+            return "senior"
+    for keyword in SENIORITY_KEYWORDS["junior"]:
+        if keyword in text:
+            return "junior"
+    for keyword in SENIORITY_KEYWORDS["mid"]:
+        if keyword in text:
+            return "mid"
     return "unknown"
+
 
 def infer_role_type(text: str) -> str:
     t = text.lower()
@@ -49,6 +66,7 @@ def parse_job(job: dict) -> dict:
     url = job.get("url", "")
 
     text = f"{title}\n{description}"
+    tech_flag = is_tech_job(text)
 
     years = extract_years_experience(text)
     skills = extract_skills(text)
@@ -64,5 +82,6 @@ def parse_job(job: dict) -> dict:
         "years_experience": years,
         "seniority": seniority,
         "role_type": role_type,
+        "is_tech_job": tech_flag,
         "raw_description": description,
     }

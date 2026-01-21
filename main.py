@@ -30,7 +30,5 @@ ranked_jobs = rank_jobs(filtered_jobs, USER_PREFERENCES)
 # 5. Print top matches
 print("\n--- TOP MATCHES ---")
 for job in ranked_jobs[:10]:
-    print(f"{job['job_title']} — {job['location']} — {job['url']}")
-    
-    
+    print(f"{job['score']} — {job['job_title']} — {job['location']} — {job['url']}")
     
