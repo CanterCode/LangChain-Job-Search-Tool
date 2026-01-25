@@ -11,7 +11,7 @@ SEARCH_QUERIES = [
 ]
 
 
-LOCATION = "Dallas, TX"
+LOCATION = "Fort Worth, TX"
 
 
 def fetch_adzuna_jobs():

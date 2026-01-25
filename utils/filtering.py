@@ -1,44 +1,47 @@
-import re
-
-def extract_years(exp_str):
-    """Extract the first number from an experience string like '3+ years'."""
-    if not exp_str:
-        return None
-    nums = re.findall(r"\d+", exp_str)
-    return int(nums[0]) if nums else None
-
 def filter_jobs(jobs, prefs):
     filtered = []
 
     for job in jobs:
+        title = job.get("job_title", "").lower()
+        location = job.get("location", "").lower()
+        skills = job.get("skills") or []
+        role_type = job.get("role_type") or "unknown"
+        seniority = job.get("seniority") or "unknown"
+
+        years = job.get("years_experience")
+
         # STRICT RULE: must be a tech job
         if not job.get("is_tech_job"):
             continue
         
-        location = job.get("location", "").lower()
-        
-        if "remote" in location:
-            pass
-
-        # STRICT RULE: must be near Watauga
-        if not any(region in location for region in ["fort worth", "tarrant", "dfw", "texas"]):
+        # Disqualify by title keywords
+        if any(keyword in title for keyword in prefs["disqualify_title_keywords"]):
             continue
 
-        # STRICT RULE: must have at least one skill
-        if not job.get("skills"):
+        # Disqualify by tech stack
+        if any(tech in title for tech in prefs["disqualify_tech"]):
             continue
 
-        # STRICT RULE: must not be backend-only
-        if job.get("role_type") == "backend":
+
+        # Must be in allowed cities or remote
+        if "remote" not in location and not any(city in location for city in prefs["allowed_cities"]):
             continue
 
-        # STRICT RULE: must not be senior
-        if job.get("seniority") in ["senior", "lead", "principal", "staff", "architect", "sr", "sr."]:
+        # Must have at least one skill
+        if not skills:
             continue
 
-        # STRICT RULE: must not require > 3 years
-        years = job.get("years_experience")
-        if years and years > 3:
+        # Must not be backend-only
+        if role_type == "backend":
+            continue
+
+        # Must not be senior
+        if job.get("seniority") == "senior":
+            continue
+
+
+        # Must not require > 3 years
+        if years is not None and years > 3:
             continue
 
         filtered.append(job)

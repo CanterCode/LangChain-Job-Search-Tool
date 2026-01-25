@@ -1,64 +1,43 @@
 import re
 
-TECH_KEYWORDS = [
-    "developer", "engineer", "software", "frontend", "front end",
-    "fullstack", "full stack", "react", "javascript", "typescript",
-    "web developer", "programmer"
-]
-
-SKILL_KEYWORDS = [
-    "react", "javascript", "typescript", "html", "css",
-    "node", "python", "aws",
-]
-
-FRONTEND_KEYWORDS = ["react", "frontend", "javascript", "typescript", "html", "css"]
-BACKEND_KEYWORDS = ["backend", "api", "node", "django", "flask", "spring", "java"]
-
-SENIORITY_KEYWORDS = {
-    "junior": ["junior", "entry level", "entry-level", "graduate", "associate", "assistant"],
-    "mid": ["mid", "intermediate"],
-    "senior": ["senior", "lead", "principal", "staff", "architect","sr", "sr."],
-}
-
-def is_tech_job(text: str) -> bool:
-    t = text.lower()
-    return any(keyword in t for keyword in TECH_KEYWORDS)
-
 def extract_years_experience(text: str) -> int | None:
     match = re.search(r"(\d+)\+?\s+years?", text.lower())
-    if match:
-        return int(match.group(1))
-    return None
+    return int(match.group(1)) if match else None
 
-def extract_skills(text: str) -> list[str]:
+def is_tech_job(text: str, prefs: dict) -> bool:
+    t = text.lower()
+    return any(keyword in t for keyword in prefs["tech_keywords"])
+
+def extract_skills(text: str, prefs: dict) -> list[str]:
     text_lower = text.lower()
-    return [skill for skill in SKILL_KEYWORDS if skill in text_lower]
+    return [skill for skill in prefs["skill_keywords"] if skill in text_lower]
 
-def infer_seniority(title: str, description: str) -> str:
+def infer_seniority(title: str, description: str, prefs: dict) -> str:
     text = f"{title} {description}".lower()
-    for keyword in SENIORITY_KEYWORDS["senior"]:
+    for keyword in prefs["seniority_keywords"]["senior"]:
         if keyword in text:
             return "senior"
-    for keyword in SENIORITY_KEYWORDS["junior"]:
+    for keyword in prefs["seniority_keywords"]["junior"]:
         if keyword in text:
             return "junior"
-    for keyword in SENIORITY_KEYWORDS["mid"]:
+    for keyword in prefs["seniority_keywords"]["mid"]:
         if keyword in text:
             return "mid"
     return "unknown"
 
-
-def infer_role_type(text: str) -> str:
+def infer_role_type(text: str, prefs: dict) -> str:
     t = text.lower()
-    if any(k in t for k in FRONTEND_KEYWORDS) and not any(k in t for k in BACKEND_KEYWORDS):
+    frontend = any(k in t for k in prefs["frontend_keywords"])
+    backend = any(k in t for k in prefs["backend_keywords"])
+    if frontend and not backend:
         return "frontend"
-    if any(k in t for k in BACKEND_KEYWORDS) and not any(k in t for k in FRONTEND_KEYWORDS):
+    if backend and not frontend:
         return "backend"
-    if any(k in t for k in FRONTEND_KEYWORDS) and any(k in t for k in BACKEND_KEYWORDS):
+    if frontend and backend:
         return "fullstack"
     return "unknown"
 
-def parse_job(job: dict) -> dict:
+def parse_job(job: dict, prefs: dict) -> dict:
     title = job.get("title", "")
     description = job.get("description", "")
     location = job.get("location", "")
@@ -66,22 +45,15 @@ def parse_job(job: dict) -> dict:
     url = job.get("url", "")
 
     text = f"{title}\n{description}"
-    tech_flag = is_tech_job(text)
-
-    years = extract_years_experience(text)
-    skills = extract_skills(text)
-    seniority = infer_seniority(title, description)
-    role_type = infer_role_type(text)
-
     return {
         "job_title": title,
         "company": company,
         "location": location,
         "url": url,
-        "skills": skills,
-        "years_experience": years,
-        "seniority": seniority,
-        "role_type": role_type,
-        "is_tech_job": tech_flag,
+        "skills": extract_skills(text, prefs),
+        "years_experience": extract_years_experience(text),
+        "seniority": infer_seniority(title, description, prefs),
+        "role_type": infer_role_type(text, prefs),
+        "is_tech_job": is_tech_job(text, prefs),
         "raw_description": description,
     }

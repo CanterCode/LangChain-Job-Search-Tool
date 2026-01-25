@@ -13,7 +13,7 @@ print(f"Fetched {len(raw_jobs)} raw jobs")
 print("Parsing jobs...")
 parsed_jobs = []
 for job in raw_jobs:
-    parsed = parse_job(job)
+    parsed = parse_job(job, USER_PREFERENCES)
     parsed_jobs.append(parsed)
 
 print(f"Parsed {len(parsed_jobs)} jobs")
@@ -31,4 +31,3 @@ ranked_jobs = rank_jobs(filtered_jobs, USER_PREFERENCES)
 print("\n--- TOP MATCHES ---")
 for job in ranked_jobs[:10]:
     print(f"{job['score']} — {job['job_title']} — {job['location']} — {job['url']}")
-    
