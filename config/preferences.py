@@ -1,10 +1,10 @@
 USER_PREFERENCES = {
     # === Disqualifiers ===
     "disqualify_title_keywords": [
-        "senior", "lead", "principal", "architect", "manager", "backend"
+        "senior", "lead", "principal", "architect", "manager", "backend", "cybersecurity", "cyber security"
     ],
     "disqualify_tech": [
-        "c++", "c#", ".net", "asp.net", "java", "go", "rust"
+        "c++", "c#", ".net", "asp.net", "java", "go", "rust", "python"
     ],
 
     # === Tech Keywords (for is_tech_job) ===

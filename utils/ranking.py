@@ -8,4 +8,18 @@ def rank_jobs(jobs, prefs):
         job["score"] = score
         ranked.append(job)
 
-    return sorted(ranked, key=lambda j: j["score"], reverse=True)
+    # Deduplicate by (title, company, location)
+    seen = set()
+    deduped = []
+    for job in ranked:
+        key = (
+            job.get("job_title", "").lower(),
+            job.get("company", "").lower(),
+            job.get("location", "").lower()
+        )
+        if key not in seen:
+            seen.add(key)
+            deduped.append(job)
+
+    return sorted(deduped, key=lambda j: j["score"], reverse=True)
+
