@@ -8,10 +8,6 @@ def is_tech_job(text: str, prefs: dict) -> bool:
     t = text.lower()
     return any(keyword in t for keyword in prefs["tech_keywords"])
 
-def extract_skills(text: str, prefs: dict) -> list[str]:
-    text_lower = text.lower()
-    return [skill for skill in prefs["skill_keywords"] if skill in text_lower]
-
 def infer_seniority(title: str, description: str, prefs: dict) -> str:
     text = f"{title} {description}".lower()
     for keyword in prefs["seniority_keywords"]["senior"]:
@@ -44,13 +40,19 @@ def parse_job(job: dict, prefs: dict) -> dict:
     company = job.get("company", "")
     url = job.get("url", "")
 
-    text = f"{title}\n{description}"
+    text = f"{title}\n{description}".lower()
+
+    extracted_skills = [kw for kw in prefs["skill_keywords"] if kw in text]
+
+    api_skills = job.get("skills") or []
+    skills = api_skills if api_skills else extracted_skills
+
     return {
         "job_title": title,
         "company": company,
         "location": location,
         "url": url,
-        "skills": extract_skills(text, prefs),
+        "skills": skills,
         "years_experience": extract_years_experience(text),
         "seniority": infer_seniority(title, description, prefs),
         "role_type": infer_role_type(text, prefs),

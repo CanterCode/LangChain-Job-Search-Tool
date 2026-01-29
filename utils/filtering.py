@@ -5,7 +5,7 @@ def filter_jobs(jobs, prefs):
         "disqualify_title": 0,
         "disqualify_tech": 0,
         "bad_location": 0,
-        "no_skills": 0,
+        "no_skills_listed": 0,
         "backend_only": 0,
         "too_senior": 0,
         "too_much_experience": 0,
@@ -42,7 +42,7 @@ def filter_jobs(jobs, prefs):
 
         # Must have at least one skill
         if not skills and not any(term in title for term in ["react", "frontend", "javascript", "ui", "web"]):
-            reasons["no_skills"] += 1
+            reasons["no_skills_listed"] += 1
             continue
 
 

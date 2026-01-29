@@ -1,4 +1,4 @@
-# LangChain Job Search Tool
+# Job Search Tool
 
 A developer-focused job search automation engine that fetches, filters, and ranks software engineering jobs based on strict, configurable preferences. The system is built to be location-aware, frontend-focused, and extensible for future scrapers and a UI.
 
